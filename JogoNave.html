@@ -31,10 +31,10 @@
 		</style>
 	</head>
 	<body>
-		<canvas id="gameCanvas" width="800" height="700"></canvas>
+		<canvas id="gameCanvas" width="800" height="450"></canvas>
 		<main>
-			<button id="start" onclick="desenhar(),criarInimigos(5)">Começar</button>
-			<button id="start" onclick="cord()">Cord</button>
+			<button id="start" onclick="desenhar(),criarChefao1(1)">Começar</button>
+			
 		</main>
 		<div id="stats"></div>
 		<audio id="somTiro" src="sounds/somTiro.wav"></audio>
@@ -110,6 +110,7 @@
 					tiroFoiDisparado = true;
         		}
     		}
+			
 
 			// Função para disparar um tiro
 			//function dispararTiroChefao1() {
@@ -171,6 +172,7 @@
 				inimigos.forEach(function(inimigo) {
 					ctx.fillRect(inimigo.x, inimigo.y, larguraInimigo, alturaInimigo);
         		});
+				
    			}
 
 			// Função para desenhar o chefao
@@ -286,16 +288,20 @@
 	function detectarColisaoChefao1() {
 		
 		chefao1.forEach(function(chefao, indice) {
-            if(acertos == 500){
-				chefao.splice(indice, 1);
-			}else if(posicaoTiroX < chefao.x + larguraChefao1 &&
+            
+			
+			if(posicaoTiroX < chefao.x + larguraChefao1 &&
                 	posicaoTiroX + tamanhoTiro > chefao.x &&
                 	posicaoTiroY < chefao.y + alturaChefao1 &&
                 	posicaoTiroY + tamanhoTiro > chefao.y){			  																	
 						tiroFoiDisparado = true;
-						somExplosão.play();
-						acertos++;				            
+						acertos++;
+						if(acertos == 25){
+					somExplosão.play();
+					chefao.splice(indice, 1);
+			}				            
 			 	}
+				 
         });
     }
 
@@ -332,33 +338,29 @@
 				desenharNave();
 				desenharTiro();
 				moverTiro();
-				desenharInimigos();
-				//desenharChefao1();
-				moverInimigos();
-				//moverChefao1();
-				detectarColisao();
-				//detectarColisaoChefao1();
+				//desenharInimigos();
+				desenharChefao1();
+				//moverInimigos();
+				moverChefao1();
+				//detectarColisao();
+				detectarColisaoChefao1();
 				
 				disable();
 				document.getElementById("stats").innerHTML = `Acertos: ${acertos} | Erros: ${erros} <br> Nivel: ${nivel}<br> Velocidade inimigo: ${velocidadeInimigo}  `;
 				// Cria novos inimigos a cada múltiplo de 5 acertos
+				
 				if (acertos % 5 === 0 && acertos > 0 && novoNivel) {
+					
 					nivel++;
 					//levelElement.textContent = `Nível: ${nivel}`;
 					criarInimigos(5);
 					velocidadeInimigo += 1; // Aumenta a velocidade dos inimigos
+					
 					//speedElement.textContent = `Velocidade: ${velocidadeInimigo}`;
 					novoNivel = false;
-        		}
-				if (nivel==5){
-				desenharFundo();
-				desenharNave();
-				desenharTiro();
-				moverTiro();
-				desenharChefao1();
-				moverChefao1();
-				detectarColisaoChefao1();
+					
 				}
+				
 				if (inimigos.length === 0) {
 					novoNivel = true; // Define como verdadeiro para criar novos inimigos no próximo nível
 				}
